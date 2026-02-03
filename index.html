@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<!--Hey MaryElla I had this idea and thought it would be kinda 
+fun to try and whip this up anyways im sure ill show you this source code and im 
+excited to make this so i can show it to you and practice some html haha 
+I Love You so very much bb and i'm so excited for what the future of us holds.
+
+btdubs the wholetime ive been working on this ive had the goofiest smile on my face this was so much fun to work on -->
+<html lang="en"> 
+<head> 
+
+    <meta charset="UTF-8">
+    <title>I'm so in love with you MaryElla</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+        margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff9ad2, #fad0c4);
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin-bottom: 40px;    
+        }
+
+
+        .screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #ff9ad2, #fad0c4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 5000;
+        }
+
+        #loginScreen input {
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 30px;
+            border: none;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        #loginScreen button {
+            padding: 12px 28px;
+            border-radius: 30px;
+            border: none;
+            font-size: 18px;
+            background: #ff4d6d;
+            color: white;
+            cursor: pointer;
+        }
+
+        .pixel-cont {/*container for the pixels for imgs*/
+            display: grid;
+            grid-template-columns: repeat(40, 28px);
+            grid-auto-rows: 28px;
+            gap: 2px;
+            margin-bottom: 40px;
+        }
+        
+        .pixel {
+            width: 28px;
+            height: 28px;
+            background-color: transparent; /* placeholder black pixels */
+            cursor: pointer;
+            /*transition: transform 0.25s ease, box-shadow 0.25s ease;*/
+            transition: transform 0.5s ease, box-shadow 0.5s ease, opacity 0.5s ease;
+            border-radius: 3px;
+            opacity: 0;
+            transform: scale(0.5);
+
+
+
+        }
+        .pixel.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+
+
+
+        .pixel:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            z-index: 2;
+            }
+
+        .pixel-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            width: 300px;
+
+           /*aspect-ratio: 1/1;*/
+           max-width: 90vw;
+           max-height: 80vh;
+           object-fit: contain;
+            width: auto;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            z-index: 1000;
+            pointer-events: none;
+            transition: transform 0.6s ease, box-shadow 0.6s ease;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+
+        .pixel.enlarged {
+            /*position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(15);
+            width: 18px;
+            height: 18px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            z-index: 1000;
+            pointer-events: none;*/
+            transform: translate(-50%, -50%) scale(1);
+            /*box-shadow: 0 30px 80px rgba(0,0,0,0.5);*/
+            opacity: 1;
+
+
+
+        }
+
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+
+        button {
+            padding: 14px 28px;
+            font-size: 18px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+
+        .yes {
+            background: #ff4d6d;
+            color: white;
+        }
+
+
+        .yes:hover {
+            transform: scale(1.1);
+            background: #ff335c;
+        }
+
+
+        .no {
+            background: white;
+            color: #ff4d6d;
+        }
+
+
+        .no:hover {
+            transform: translateX(20px);
+            
+        }
+
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+
+
+        .heart {
+            width: 250px;
+            height: 20px;
+            border-radius: 20px;
+            background: #fff;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .heartfill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff4d6d, #ff85a2);
+            transition: width 0.4s ease;
+        }
+    </style>       
+</head>
+
+<body> 
+    <div id="loginScreen" class="screen">
+    <h1>💖 Hello Ms. Pumpkin Slice 💖</h1>
+    <p>Enter Password :D </p>
+    <input type="password" id="passwordInput" placeholder="hint: ___ wit da chicken">
+    <button onclick="checkPassword()">Enter</button>
+</div>
+
+    <div id ="loaderScreen" class="screen" style="display:none;">
+        <h1>Loading...</h1>
+        <div class="heart"> 
+            <div class="heartfill"></div>
+        </div>
+
+
+
+    </div>
+
+
+
+
+    <div class="pixel-cont" id="pixelCont"></div >
+        <!-- Pixels will be generated here picel text here type stuff-->
+    <div class = "buttons">
+        <button class="yes" id="yesBtn" onclick="youbettersayYes()">Yes Goofy You're the goat</button>
+        <button class="no" id="noBtn">No (you hate me)</button> <!--why woudl you click this :( -->
+    </div>
+
+    <div class = "modal" id="modal" onclick = "closeModal()">
+        <div class="modal-content">
+            <p>YAYYY I LOVE YOU SO MUCH MARYELLA!!!  🩷🩷🩷🩷 &lt;3 &lt;3 &lt;3</p>
+        </div>
+    </div>
+
+
+
+<!--ok this is the hard part, i now gotta use a script to make the grid spell out what i wanna say
+this is the new part lol we'll see how i do -->
+    <script>
+        const PASS = "butter"
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            if (input === PASS) {
+                
+                document.getElementById('loginScreen').style.display = 'none';
+                loginScreen.style.display = 'none';
+                showLoader();
+            } else {
+                alert('come on dude you got this ;) ');
+            }
+        }
+
+
+        function showLoader() {
+            const loader = document.getElementById('loaderScreen');
+            const fill = document.querySelector('.heartfill');
+
+            loader.style.display = 'flex';
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                fill.style.width = Math.min(progress, 100) + '%';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        startPixelAnimation();
+                    }, 500);
+                }
+            }, 300);
+        }
+        
+        
+        
+        
+        const pattern = [ ////MASSIVE TODDO, FIX ISSUE WHERE ENLARGED IMAGES GET CUT OFF BC OF OVERFLOW HIDDEN  THEY FUCK THE GRID UP something to do with onlcick 
+            "0001000001001001010010001000000000000000",
+            "0001000001000001010010001001100100010000",
+            "0001001001001001010001010010010100010000",
+            "0001011101001001010000100010010100010000",
+            "0000100010001001010000100001100011100000",
+            "0000000000000000000000000000000000000000",
+            "0000000010000000000000000000000000000000",
+            "0000000010000011000001000101000100000000",
+            "0000000011100100100001101101000100000000",
+            "0000000010010111100001111100101000000000",
+            "0000000010010100000001010100010000000000",
+            "0000000011100011000001000100010000000000",
+            "0000000000000000000000000000000000000000",
+            "0001000100000001000000000000000000000000",
+            "0001000100111001001100000001001000000110",
+            "0001000100000101010010110001000011001001",
+            "0001000100111101011110101011101010101111",
+            "0000101001000101010000101001001010101000",
+            "0000010000111101001100101001001010100110",
+            "0000000000000000000000000000000000000000",
+            "0000000000000000000000000000000000000000",
+            "0000000000000000000000000000000000000000",
+            "0000000000000000000000000000000000000000",
+
+
+            
+        ];
+
+        const pixelCont = document.getElementById('pixelCont');
+
+        const fullimages = [
+            'small/christmastreemall.webp', 'small/ilovethis.webp', 'small/IMG_3669.webp', 'small/IMG_3670.webp',
+             'small/IMG_3671.webp', 'small/IMG_3672.webp', 'small/IMG_3673.webp', 'small/IMG_3675.webp', 'small/IMG_3677.webp',
+              'small/IMG_3686.webp', 'small/IMG_3942.webp', 'small/IMG_3943.webp', 'small/IMG_3977.webp', 'small/IMG_3980.webp',
+               'small/IMG_4056.webp', 'small/IMG_4062.webp', 'small/IMG_4182.webp', 'small/IMG_4207.webp', 'small/IMG_4225.webp',
+                'small/IMG_4283.webp', 'small/IMG_4288.webp', 'small/IMG_4293.webp', 'small/IMG_4306.webp', 'small/IMG_4308.webp',
+                 'small/IMG_4318.webp', 'small/IMG_4319.webp', 'small/IMG_4359.webp', 'small/IMG_4388.webp', 'small/IMG_4395.webp',
+                  'small/IMG_4413.webp', 'small/IMG_4415.webp', 'small/IMG_4425.webp', 'small/IMG_4443.webp','small/IMG_4496.webp',
+                   'small/IMG_4514.webp','small/IMG_4515.webp', 'small/IMG_4595.webp', 'small/IMG_4597.webp', 'small/IMG_4613.webp',
+                    'small/IMG_4617.webp', 'small/IMG_4619.webp', 'small/IMG_4629.webp', 'small/IMG_4645.webp', 'small/IMG_4647.webp',
+                     'small/IMG_4648.webp', 'small/IMG_4649.webp', 'small/IMG_4652.webp', 'small/IMG_4655.webp', 'small/IMG_4658.webp',
+                      'small/IMG_4661.webp', 'small/IMG_4664.webp', 'small/IMG_4666.webp', 'small/IMG_4673.webp', 'small/IMG_4676.webp',
+                       'small/IMG_4677.webp', 'small/IMG_4679.webp', 'small/IMG_4687.webp', 'small/IMG_4690.webp', 'small/IMG_4693.webp',
+                        'small/IMG_4695.webp', 'small/IMG_4696.webp', 'small/IMG_4699.webp', 'small/IMG_4701.webp', 'small/IMG_4704.webp',
+                         'small/IMG_4739.webp', 'small/IMG_4740.webp', 'small/IMG_4756.webp', 'small/IMG_4757.webp', 'small/IMG_4758.webp', 
+                         'small/IMG_4759.webp', 'small/IMG_4760.webp', 'small/IMG_4761.webp', 'small/IMG_4762.webp', 'small/IMG_4763.webp',
+                          'small/IMG_4764.webp', 'small/IMG_8028.webp', 'small/img1.webp', 'small/img2.webp', 'small/img3.webp', 'small/img4.webp', 
+                          'small/img5.webp', 'small/img6.webp', 'small/img7.webp', 'small/img8.webp', 'small/img9.webp', 'small/img10.webp',
+                          'small/img11.webp', 'small/img12.webp', 'small/img13.webp', 'small/img14.webp', 'small/img15.webp', 'small/img16.webp',
+                           'small/img17.webp', 'small/img18.webp', 'small/img19.webp', 'small/img20.webp', 'small/img21.webp', 'small/img22.webp', 
+                           'small/lp_image.webp', 'small/lp_image2.webp', 'small/lp_image3.webp', 'small/lp_image4.webp', 'small/lp_image5.webp',
+                            'small/lp_image6.webp', 'small/lp_image7.webp', 'small/lp_image8.webp', 'small/maryellamac.webp', 'small/plateofalifetime.webp', 'small/thisonesgood.webp'
+
+
+        ];
+
+        const images = [
+            'small/christmastreemall.webp', 'small/ilovethis.webp', 'small/IMG_3669.webp', 'small/IMG_3670.webp',
+             'small/IMG_3671.webp', 'small/IMG_3672.webp', 'small/IMG_3673.webp', 'small/IMG_3675.webp', 'small/IMG_3677.webp',
+              'small/IMG_3686.webp', 'small/IMG_3942.webp', 'small/IMG_3943.webp', 'small/IMG_3977.webp', 'small/IMG_3980.webp',
+               'small/IMG_4056.webp', 'small/IMG_4062.webp', 'small/IMG_4182.webp', 'small/IMG_4207.webp', 'small/IMG_4225.webp',
+                'small/IMG_4283.webp', 'small/IMG_4288.webp', 'small/IMG_4293.webp', 'small/IMG_4306.webp', 'small/IMG_4308.webp',
+                 'small/IMG_4318.webp', 'small/IMG_4319.webp', 'small/IMG_4359.webp', 'small/IMG_4388.webp', 'small/IMG_4395.webp',
+                  'small/IMG_4413.webp', 'small/IMG_4415.webp', 'small/IMG_4425.webp', 'small/IMG_4443.webp','small/IMG_4496.webp',
+                   'small/IMG_4514.webp','small/IMG_4515.webp', 'small/IMG_4595.webp', 'small/IMG_4597.webp', 'small/IMG_4613.webp',
+                    'small/IMG_4617.webp', 'small/IMG_4619.webp', 'small/IMG_4629.webp', 'small/IMG_4645.webp', 'small/IMG_4647.webp',
+                     'small/IMG_4648.webp', 'small/IMG_4649.webp', 'small/IMG_4652.webp', 'small/IMG_4655.webp', 'small/IMG_4658.webp',
+                      'small/IMG_4661.webp', 'small/IMG_4664.webp', 'small/IMG_4666.webp', 'small/IMG_4673.webp', 'small/IMG_4676.webp',
+                       'small/IMG_4677.webp', 'small/IMG_4679.webp', 'small/IMG_4687.webp', 'small/IMG_4690.webp', 'small/IMG_4693.webp',
+                        'small/IMG_4695.webp', 'small/IMG_4696.webp', 'small/IMG_4699.webp', 'small/IMG_4701.webp', 'small/IMG_4704.webp',
+                         'small/IMG_4739.webp', 'small/IMG_4740.webp', 'small/IMG_4756.webp', 'small/IMG_4757.webp', 'small/IMG_4758.webp', 
+                         'small/IMG_4759.webp', 'small/IMG_4760.webp', 'small/IMG_4761.webp', 'small/IMG_4762.webp', 'small/IMG_4763.webp',
+                          'small/IMG_4764.webp', 'small/IMG_8028.webp', 'small/img1.webp', 'small/img2.webp', 'small/img3.webp', 'small/img4.webp', 
+                          'small/img5.webp', 'small/img6.webp', 'small/img7.webp', 'small/img8.webp', 'small/img9.webp', 'small/img10.webp',
+                          'small/img11.webp', 'small/img12.webp', 'small/img13.webp', 'small/img14.webp', 'small/img15.webp', 'small/img16.webp',
+                           'small/img17.webp', 'small/img18.webp', 'small/img19.webp', 'small/img20.webp', 'small/img21.webp', 'small/img22.webp', 
+                           'small/lp_image.webp', 'small/lp_image2.webp', 'small/lp_image3.webp', 'small/lp_image4.webp', 'small/lp_image5.webp',
+                            'small/lp_image6.webp', 'small/lp_image7.webp', 'small/lp_image8.webp', 'small/maryellamac.webp', 'small/plateofalifetime.webp', 'small/thisonesgood.webp'
+            /*'img/IMG_3671.jpg', 'img/IMG_3672.jpg', 'img/IMG_3673.jpg', 
+            'img/IMG_3675.JPG', 'img/IMG_3677.jpg', 'img/IMG_3686.jpg',
+            'img/IMG_3942.jpeg', 'img/IMG_3943.jpeg', 'img/IMG_3977.jpeg', 
+            'img/IMG_3980.jpeg', 'img/IMG_4056.jpeg','img/IMG_4062.jpeg', 'img/IMG_4182.jpeg',
+            'img/IMG_4207.jpeg', 'img/IMG_4225.PNG', 'img/IMG_4283.jpeg', 'img/IMG_4288.jpeg', 'img/IMG_4293.jpeg',
+            'img/IMG_4306.jpeg', 'img/IMG_4308.jpeg', 'img/IMG_4318.JPG', 'img/IMG_4319.JPG', 'img/IMG_4359.jpeg', 'img/IMG_4388.JPG', 
+            'img/IMG_4395.jpeg', 'img/IMG_4413.jpeg', 'img/IMG_4415.jpeg', 'img/IMG_4425.jpeg', 'img/IMG_4443.JPG', 'img/IMG_4496.jpeg', 
+              'img/IMG_4514.jpeg', 'img/IMG_4515.jpeg', 'img/IMG_4595.jpeg' , 'img/IMG_4597.jpeg', 'img/IMG_4613.jpeg', 
+               'img/IMG_4617.jpeg', 'img/IMG_4619.jpeg', 'img/IMG_4629.JPG', 'img/IMG_4645 2.JPG', 'img/IMG_4645.JPG', 'img/IMG_4647 2.JPG', 
+               'img/IMG_4647.JPG', 'img/IMG_4648 2.JPG', 'img/IMG_4648.JPG', 'img/IMG_4649.JPG', 'img/IMG_4652.JPG', 'img/IMG_4655.JPG',
+                'img/IMG_4658.JPG', 'img/IMG_4661.JPG', 'img/IMG_4664.JPG', 'img/IMG_4666.JPG', 'img/IMG_4673.JPG', 'img/IMG_4676.JPG',
+                 'img/IMG_4677.JPG', 'img/IMG_4679.JPG', 'img/IMG_4687.JPG', 'img/IMG_4690.JPG', ' img0.jpg',
+                  ' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',
+                  	' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',
+                   	' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',' img0.jpg',
+                    	' img/IMG-2388.png',
+                      'img/img16.jpeg', 'img/img17.jpeg', 'img/img18.jpeg', 'img/img19.jpeg', 'img/img20.jpeg', 'img/img21.jpeg', 'img/img22.JPG',
+                       'img/lp_image 2.jpeg', 'img/lp_image 3.jpeg', 'img/lp_image 4.jpeg', 'img/lp_image 5.jpeg', 'img/lp_image 6.jpeg', 
+                      	'img/lp_image 7.jpeg','img/lp_image 8.jpeg','img/lp_image .jpeg',
+                       	'img/Photo on 9-17-25 at 11.47 PM #5.jpeg','img/Screenshot 2026-02-01 at 8.36.44 PM.png','img/Screenshot 2026-02-01 at 8.39.20 PM.png',
+                         'img/Screenshot 2026-02-01 at 8.49.47 PM.png', 'img/Screenshot 2026-02-01 at 9.04.58 PM.png'*/
+        ];
+
+        function startPixelAnimation() {
+           
+            let isshowing = false; 
+            let delay = 0;
+            let imgindex = 0;
+
+            let activeOverlay = null;
+            let activetimeout=null; 
+            pattern.forEach(row => {
+                row.split('').forEach(cell =>{
+                    
+                    //const div = document.createElement('div');
+                    //if (cell === '1') div.className = 'pixel';
+                    //pixelCont.appendChild(div);
+                    //let imgindex = 0;
+                    if (cell === '1'){
+                        const div = document.createElement('div');
+                        div.className = 'pixel';
+                        const thisImgIndex = imgindex;
+                        //div.style.backgroundImage = "url('img/christmastreemall.jpeg')";
+                        div.style.backgroundImage = `url('${images[imgindex % images.length]}')`;
+                        imgindex++;
+                        div.style.backgroundSize = "cover";//as opposed to cover /contain(decdie beteween the two later)
+                        div.style.backgroundPosition = "center";
+                        setTimeout(() => div.classList.add('show'), delay);
+                        delay += 20;
+                        //const div = document.createElement('div');
+                        //div.className = 'pixel';///default pxel for now so i can spell it out nicely first and its not chopped cheese 
+                        let pixelImgIndex = imgindex; 
+                        
+                        div.addEventListener('click', () => {
+                            //if (isshowing) return;
+                            isshowing = true; 
+
+                            if (activeOverlay){
+                                activeOverlay.remove();
+                                clearTimeout(activetimeout);
+                            }
+                            //div.classList.toggle('enlarged');
+                            ///setTimeout(() => div.classList.remove('enlarged'), 1200);
+                            ////todo update to change images and add an animation for enlarging kinda like before but better
+                            /*const overlay = div.cloneNode(true); // copy the pixel
+                            overlay.style.position = 'fixed';
+                            overlay.style.top = '50%';
+                            overlay.style.left = '50%';
+                            overlay.style.transform = 'translate(-50%, -50%) scale(10)';
+                            overlay.style.zIndex = 1000;
+                            overlay.style.pointerEvents = 'none';
+                            document.body.appendChild(overlay);*/
+                            const overlay = document.createElement('img'); //div.cloneNode(true);
+                           
+                            const fullImgSrc = fullimages[thisImgIndex % fullimages.length];
+                            overlay.className = 'pixel-overlay';
+                            overlay.src = fullimages[thisImgIndex % fullimages.length];
+                            overlay.style.backgroundImage = `url('${fullImgSrc}')`;                            overlay.style.backgroundSize = 'contain';
+                            //overlay.style.backgroundSize = 'cover';
+                            overlay.style.backgroundPosition = 'center';
+                            overlay.style.backgroundRepeat = 'no-repeat';
+                            activeOverlay = overlay;
+                            //overlay.style.width = '80vw';
+                            //overlay.style.height = '80vh';
+                            document.body.appendChild(overlay);
+                            requestAnimationFrame(() => {
+                                overlay.classList.add('enlarged');
+                            });
+                            setTimeout(() => {
+                                overlay.style.opacity = '0';
+                                setTimeout(() => {
+                                    if (activeoverlay === overlay) {
+                                        overlay.remove();
+                                        activeoverlay = null;
+                                    }
+                                    //document.body.removeChild(overlay);
+                                //isshowing = false; }, 500);
+                                }, 600);
+
+                            }, 1500);//document.body.removeChild(overlay), 500);
+                        });
+                        pixelCont.appendChild(div);
+                    } else {
+                        const space= document.createElement('div');
+                        space.style.width = '18px';
+                        space.style.height = '18px';
+                        pixelCont.appendChild(space);
+                    
+                    
+                    }
+                });
+            });
+        }
+
+        function youbettersayYes() {
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+
+        //no button 
+        let noClicks = 0; 
+        const nobtn =document.getElementById('noBtn');
+        nobtn.addEventListener('click', ()=>{
+            noClicks++;
+            const offset = 100;
+            const x = Math.random() * (window.innerWidth - nobtn.offsetWidth - offset);
+            const y = Math.random() * (window.innerHeight - nobtn.offsetHeight - offset);
+            nobtn.style.position = 'absolute';
+            nobtn.style.left = `${x}px`;
+            nobtn.style.top = `${y}px`;
+
+            if (noClicks >= 10) {
+                //alert("Come on MaryElla, you know you want to say yes! :)");
+                alert("okay fraud, click that no buttone one more time and see what happens  ");
+                //todo: add a funny easter egg like the entire screen shakes or something funny
+                //double todo: also add a slide show like thing with all the images on the site, should be easy enough
+            }
+        })
+
+
+    </script>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+</body >
+
+
+
+
+    
+
+
+
+
+
+
+
+
+</html>
